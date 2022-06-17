@@ -1,0 +1,176 @@
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>JS Lab</title>
+    <style>
+        .parent {
+            
+            
+        }
+        .child {
+            display: inline-block;
+            vertical-align: left;
+            }
+       
+      
+        .CounterArea{
+            width: 200px;
+            height: 200px;
+            align-content: left;
+            border-style: groove;
+            text-align: center;
+   
+        }
+        .top10{
+            width: 200px;
+            height: 200px;
+            align-content: right;
+            text-align: center;
+
+        }
+
+        body{
+            margin: auto;
+        }
+        .staty{
+            display: none;
+            
+            visibility: hidden;
+        }
+        .numberOfTries{
+            text-align: center;
+        } 
+    </style>
+</head>
+<body>
+    <div class='parent'>
+        <div class='child'>
+            <div class="CounterArea" id="counter" onclick="stopTimer()">Clicking area</div>
+        </div>
+        
+       
+      </div>
+      <button class="start" onclick="starter()">Start</button>
+        <button class="stop" onclick="stop()">Stop</button>
+        <button class="stop" onclick="reset()">Reset</button>
+        <p>Enter Number of tries: </p>
+        <input id="numberOfAttempts" value="5" type="number">
+
+        <div class="staty">
+                <p class='AttemptCounter'></p>
+                <p class="best" ></p>
+                <p class="worst"></p>
+                <p class="avg."></p>
+            
+    
+        </div>
+
+            <div class="top10">
+                Best times List:
+                    <p class="Attempt" ></p>
+            </div>
+
+
+    
+<script>
+var startTime;
+var triesNumber = 0;
+var triesCounter = 0;
+var clickCounter = 1;
+var click = 0;
+const timeArr = []; 
+
+function starter(){
+    document.getElementsByClassName('staty')[0].style.display = 'block';
+    document.getElementsByClassName('staty')[0].style.visibility = 'visible';
+    var x = document.getElementById("numberOfAttempts");
+    triesNumber = x.value;
+    changeColor();
+
+
+}
+
+function changeColor(){
+    var time = 1000;
+    intervalID = setInterval(() =>{
+  
+        if (triesCounter == triesNumber) {
+        stop();
+   
+    }
+    triesCounter += 1;
+    clickCounter = 0;
+    startTime = performance.now()
+    var time = getRandomInt(500,5000);
+    var colourID = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+    document.getElementById('counter').style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+    },time)
+}
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+function stopTimer(){
+    if (clickCounter == 0) {
+        clickCounter = 1;
+     
+        var endTime = performance.now();
+        var time = endTime - startTime;
+        timeArr.push(time);
+        var min = Math.min.apply(Math, timeArr);
+        var max = Math.max.apply(Math, timeArr);
+        var sum = 0;
+        timeArr.forEach(function(num) { sum += num });
+        var average = sum / timeArr.length;
+        //var avg = Math.avg.apply(Math, timeArr);
+        addDivType(min,'best');
+        addDivType(max,'worst');
+        addDivType(average,'avg.');
+        addTop10List(time,click)
+        console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+        startTime = 0;
+        endTime = 0;
+    }
+    
+}
+function stop(){
+    triesCounter = 0;
+    clickCounter = 0;
+    clearInterval(intervalID);
+}
+function reset(){
+    stop();
+    var staty = document.getElementsByClassName('staty')[0].style.display = 'block';
+    staty = document.getElementsByClassName('staty')[0].style.visibility = 'visible';
+    startTime;
+    triesCounter = 0;
+    clickCounter = 1;
+    click = 0;
+    addDivType(0,'best');
+    addDivType(0,'worst');
+    addDivType(0,'avg.');
+    var bt = document.getElementsByClassName('Attempt')[0];
+    bt.innerHTML = '';
+    bt.appendChild;
+    
+
+
+}
+function addDivType(time,type){
+    var bt = document.getElementsByClassName(type)[0];
+    bt.innerHTML = '';
+    bt.appendChild(document.createTextNode('The '+ type +' time : ' + time));
+}
+function addTop10List(time,num){
+    var bt = document.getElementsByClassName('Attempt')[0];
+    var textNode = document.createTextNode('The '+ num +' time : ' + time);
+    bt.appendChild(textNode);
+    var linebreak = document.createElement('br');
+    bt.appendChild(linebreak);
+    
+}
+
+</script>
+</body>
+</html>
